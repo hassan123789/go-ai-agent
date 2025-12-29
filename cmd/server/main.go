@@ -75,8 +75,29 @@ func main() {
 		Verbose:       cfg.IsDevelopment(),
 	})
 
-	// Initialize agent handler
+	// Initialize Reflexion agent (self-improving with evaluation loop)
+	reflexionAgent := agent.NewReflexionAgent(llmClient, toolRegistry, agent.ReflexionConfig{
+		Config: agent.Config{
+			MaxIterations: 10,
+			Verbose:       cfg.IsDevelopment(),
+		},
+		MaxReflections:   3,
+		QualityThreshold: 8.0,
+	})
+
+	// Initialize Orchestrator agent (multi-agent task decomposition)
+	orchestratorAgent := agent.NewOrchestratorAgent(llmClient, toolRegistry, agent.OrchestratorConfig{
+		Config: agent.Config{
+			MaxIterations: 10,
+			Verbose:       cfg.IsDevelopment(),
+		},
+		MaxWorkers: 5,
+	})
+
+	// Initialize handlers
 	agentHandler := handler.NewAgentHandler(reactAgent)
+	reflexionHandler := handler.NewReflexionHandler(reflexionAgent)
+	orchestratorHandler := handler.NewOrchestratorHandler(orchestratorAgent)
 
 	// Routes
 	e.GET("/health", chatHandler.Health)
@@ -84,6 +105,9 @@ func main() {
 	api := e.Group("/api")
 	api.POST("/chat", chatHandler.Chat)
 	api.POST("/agent", agentHandler.Run)
+	api.POST("/reflexion", reflexionHandler.Run)
+	api.POST("/orchestrator", orchestratorHandler.Run)
+	api.GET("/orchestrator/workers", orchestratorHandler.ListWorkers)
 
 	// Start server with graceful shutdown
 	go func() {

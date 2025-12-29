@@ -32,6 +32,9 @@ type Response struct {
 
 	// Usage contains token usage information.
 	Usage Usage `json:"usage"`
+
+	// Metadata contains additional agent-specific information.
+	Metadata map[string]any `json:"metadata,omitempty"`
 }
 
 // Step represents a single step in the agent's reasoning process.
