@@ -46,38 +46,42 @@ go-ai-agent/
 
 ---
 
-### Phase 2: Function Calling（Week 3-4）🔄 次のフェーズ
+### Phase 2: Function Calling（Week 3-4）✅ 完了
 
 ```
 internal/
 ├── tools/
-│   ├── registry.go              # ツール登録・管理
-│   ├── tool.go                  # Tool インターフェース
-│   ├── web_search.go            # Web検索ツール
-│   ├── calculator.go            # 計算ツール
-│   └── database.go              # DB クエリツール
+│   ├── tool.go                  # ✅ Tool インターフェース
+│   ├── registry.go              # ✅ ツール登録・管理
+│   ├── calculator.go            # ✅ 計算ツール（Go AST使用）
+│   ├── calculator_test.go       # ✅ テスト
+│   ├── registry_test.go         # ✅ テスト
+│   └── tool_test.go             # ✅ テスト
 ├── agent/
-│   ├── agent.go                 # エージェントインターフェース
-│   ├── react.go                 # ReAct パターン実装
-│   └── executor.go              # ツール実行エンジン
+│   ├── agent.go                 # ✅ エージェントインターフェース
+│   └── react.go                 # ✅ ReAct パターン実装
+├── llm/
+│   └── tools.go                 # ✅ Function Calling サポート
+└── handler/
+    └── agent_handler.go         # ✅ POST /api/agent エンドポイント
 ```
 
 #### 実装タスク
 
-| タスク | 詳細 | 推定時間 |
-|--------|------|---------|
-| Tool インターフェース設計 | 汎用的なツール定義 | 3時間 |
-| Function Calling 実装 | OpenAI API の tools パラメータ | 6時間 |
-| ツール実装（3つ） | 計算、Web検索、DB | 6時間 |
-| ReAct ループ実装 | Thought → Action → Observation サイクル | 8時間 |
-| エラーハンドリング | リトライ、タイムアウト | 4時間 |
-| テスト | インテグレーションテスト | 4時間 |
+| タスク | 詳細 | 状態 |
+|--------|------|------|
+| Tool インターフェース設計 | 汎用的なツール定義 | ✅ 完了 |
+| Function Calling 実装 | OpenAI API の tools パラメータ | ✅ 完了 |
+| ツール実装 | 計算ツール（Go AST使用） | ✅ 完了 |
+| ReAct ループ実装 | Thought → Action → Observation サイクル | ✅ 完了 |
+| Agent HTTP ハンドラー | POST /api/agent エンドポイント | ✅ 完了 |
+| テスト | ユニットテスト19件 | ✅ 完了 |
 
 #### 参照実装
 
 ReAct パターンの正確な定義（[Yao et al., 2022](https://arxiv.org/abs/2210.03629)）:
 
-```
+```text
 Thought 1: [推論] タスクを分解し、次のアクションを決定
 Action 1:  [行動] ツールを呼び出す（Search, Lookup, Calculate等）
 Observation 1: [観察] ツールからの結果を受け取る
@@ -86,13 +90,13 @@ Thought 2: [推論] 結果を解釈し、次のステップを決定
 Action N: Finish[最終回答]
 ```
 
-**成果物**: Function Calling で外部ツールを呼び出せるエージェント
+**成果物**: Function Calling で外部ツールを呼び出せるエージェント ✅
 
 ---
 
-### Phase 3: メモリ & RAG（Week 5-6）
+### Phase 3: メモリ & RAG（Week 5-6）🔄 次のフェーズ
 
-```
+```text
 internal/
 ├── memory/
 │   ├── memory.go                # Memory インターフェース
