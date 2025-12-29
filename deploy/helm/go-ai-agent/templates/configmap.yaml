@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "go-ai-agent.fullname" . }}-config
+  labels:
+    {{- include "go-ai-agent.labels" . | nindent 4 }}
+data:
+  SERVER_PORT: {{ .Values.config.serverPort | quote }}
+  LOG_LEVEL: {{ .Values.config.logLevel | quote }}
+  LLM_PROVIDER: {{ .Values.config.llmProvider | quote }}
+  LLM_MODEL: {{ .Values.config.llmModel | quote }}
+  LLM_MAX_TOKENS: {{ .Values.config.llmMaxTokens | quote }}
+  OLLAMA_BASE_URL: {{ .Values.config.ollamaBaseUrl | quote }}
+  AGENT_MAX_ITERATIONS: {{ .Values.config.agentMaxIterations | quote }}
+  AGENT_TIMEOUT_SECONDS: {{ .Values.config.agentTimeoutSeconds | quote }}

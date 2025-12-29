@@ -101,6 +101,52 @@ curl -X POST http://localhost:8080/api/chat \
   }'
 ```
 
+## 🐳 Docker & Kubernetes
+
+### Docker Compose (Development)
+
+```bash
+# Start full stack (API + PostgreSQL/pgvector + Ollama + Prometheus + Grafana)
+docker-compose up -d
+
+# View logs
+docker-compose logs -f api
+
+# Stop
+docker-compose down
+```
+
+### Kubernetes with Kustomize
+
+```bash
+# Deploy to Kubernetes
+kubectl apply -k deploy/k8s/base/
+
+# Check status
+kubectl -n go-ai-agent get pods
+
+# Port forward for local access
+kubectl -n go-ai-agent port-forward svc/go-ai-agent 8080:80
+```
+
+### Kubernetes with Helm
+
+```bash
+# Install
+helm install go-ai-agent ./deploy/helm/go-ai-agent \
+  --namespace go-ai-agent \
+  --create-namespace \
+  --set secrets.openaiApiKey="your-api-key"
+
+# Upgrade
+helm upgrade go-ai-agent ./deploy/helm/go-ai-agent \
+  --namespace go-ai-agent \
+  --set replicaCount=3
+
+# Uninstall
+helm uninstall go-ai-agent --namespace go-ai-agent
+```
+
 ## 🛠️ Development
 
 ```bash
@@ -124,7 +170,7 @@ make pre-push
 - [x] **Phase 3**: ReAct Agent Pattern
 - [x] **Phase 4**: Advanced Agent Patterns (Reflexion, Orchestrator, Hierarchical Memory, RAPTOR)
 - [x] **Phase 5**: Multi-LLM Support (Claude, Ollama local models)
-- [ ] **Phase 6**: Kubernetes Deployment
+- [x] **Phase 6**: Kubernetes Deployment
 
 ## 🧪 Features
 
@@ -142,11 +188,13 @@ make pre-push
 - ✅ **Streaming Responses**: SSE support
 - ✅ **Clean Architecture**: Separation of concerns
 
+- ✅ **Docker & K8s**: Multi-stage build, Kustomize, Helm chart
+- ✅ **PostgreSQL + pgvector**: Vector storage in production
+- ✅ **Monitoring**: Prometheus + Grafana stack
+
 ### Coming Soon
 
-- 🔄 Vector Store (pgvector)
 - 🔄 gRPC API
-- 🔄 Kubernetes Manifests
 - 🔄 Web Search Tool Integration
 
 ## 📊 Tech Stack
@@ -157,8 +205,10 @@ make pre-push
 | HTTP Framework | Echo v4 |
 | LLM Clients | go-openai, anthropic-sdk-go |
 | LLM Providers | OpenAI, Claude, Ollama |
-| Vector DB | pgvector (planned) |
-| Deployment | Kubernetes (planned) |
+| Vector DB | pgvector |
+| Container | Docker (multi-stage) |
+| Orchestration | Kubernetes, Helm |
+| Monitoring | Prometheus, Grafana |
 
 ## 📄 License
 

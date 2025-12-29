@@ -1,0 +1,25 @@
+# Kustomize base configuration
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: go-ai-agent
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - secret.yaml
+  - deployment.yaml
+  - service.yaml
+  - hpa.yaml
+  - ingress.yaml
+  - postgres.yaml
+
+commonLabels:
+  app.kubernetes.io/name: go-ai-agent
+  app.kubernetes.io/component: api
+  app.kubernetes.io/part-of: go-ai-agent
+
+images:
+  - name: go-ai-agent
+    newName: ghcr.io/hassan123789/go-ai-agent
+    newTag: latest

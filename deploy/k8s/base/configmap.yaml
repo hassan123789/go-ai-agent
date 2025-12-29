@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: go-ai-agent-config
+  namespace: go-ai-agent
+data:
+  # Server configuration
+  SERVER_PORT: "8080"
+  LOG_LEVEL: "info"
+
+  # LLM Provider settings
+  LLM_PROVIDER: "openai"
+  LLM_MODEL: "gpt-4o-mini"
+  LLM_MAX_TOKENS: "2048"
+
+  # Ollama settings (for local models)
+  OLLAMA_BASE_URL: "http://ollama:11434/v1"
+  OLLAMA_MODEL: "llama3.2"
+
+  # Database settings
+  DATABASE_HOST: "postgres"
+  DATABASE_PORT: "5432"
+  DATABASE_NAME: "aiagent"
+  DATABASE_SSLMODE: "disable"
+
+  # Agent settings
+  AGENT_MAX_ITERATIONS: "10"
+  AGENT_TIMEOUT_SECONDS: "120"
+
+  # Memory settings
+  MEMORY_WORKING_CAPACITY: "10"
+  MEMORY_EPISODIC_CAPACITY: "100"
+  MEMORY_CONSOLIDATION_THRESHOLD: "0.7"
