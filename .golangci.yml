@@ -8,12 +8,10 @@ linters:
   default: none
   enable:
     - errcheck
-    - gosimple
     - govet
     - ineffassign
     - staticcheck
     - unused
-    - goimports
     - gosec
     - dupl
     - noctx
@@ -21,26 +19,32 @@ linters:
     - prealloc
     - unconvert
     - misspell
+  settings:
+    dupl:
+      threshold: 150
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+    misspell:
+      locale: US
+  exclusions:
+    rules:
+      - path: _test\.go
+        linters:
+          - dupl
+          - gosec
+      - path: cmd/
+        linters:
+          - noctx
 
-linters-settings:
-  dupl:
-    threshold: 150
-  govet:
-    enable-all: true
-  goimports:
-    local-prefixes: github.com/hassan123789/go-ai-agent
-  misspell:
-    locale: US
-
-issues:
-  exclude-rules:
-    - path: _test\.go
-      linters:
-        - dupl
-        - gosec
-    - path: cmd/
-      linters:
-        - noctx
+formatters:
+  enable:
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/hassan123789/go-ai-agent
 
 output:
   formats:

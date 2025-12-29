@@ -11,9 +11,9 @@ import (
 
 // OpenAIClient implements the Client interface using OpenAI's API.
 type OpenAIClient struct {
-	client       *openai.Client
-	model        string
-	defaultMax   int
+	client     *openai.Client
+	model      string
+	defaultMax int
 }
 
 // OpenAIConfig contains configuration for the OpenAI client.
@@ -128,7 +128,7 @@ func (c *OpenAIClient) ChatStream(ctx context.Context, req *ChatRequest) (<-chan
 
 	go func() {
 		defer close(ch)
-		defer stream.Close()
+		defer func() { _ = stream.Close() }()
 
 		for {
 			response, err := stream.Recv()

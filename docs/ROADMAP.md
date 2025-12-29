@@ -231,21 +231,21 @@ type Agent struct {
 
 func (a *Agent) Run(ctx context.Context, query string) (string, error) {
     messages := []llm.Message{{Role: "user", Content: query}}
-    
+
     for i := 0; i < maxIterations; i++ {
         // 1. Thought + Action を生成
         resp, _ := a.llm.ChatWithTools(ctx, messages, a.tools)
-        
+
         // 2. Finish なら終了
         if resp.FinishReason == "stop" {
             return resp.Content, nil
         }
-        
+
         // 3. ツール呼び出し
         for _, call := range resp.ToolCalls {
             tool := a.tools[call.Name]
             result, _ := tool.Execute(ctx, call.Arguments)
-            
+
             // 4. Observation を追加
             messages = append(messages, llm.Message{
                 Role:    "tool",
@@ -253,7 +253,7 @@ func (a *Agent) Run(ctx context.Context, query string) (string, error) {
             })
         }
     }
-    
+
     return "", errors.New("max iterations exceeded")
 }
 ```

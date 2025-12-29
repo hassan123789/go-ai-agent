@@ -2,7 +2,6 @@ package llm
 
 import (
 	"context"
-	"io"
 )
 
 // Message represents a chat message.
@@ -45,10 +44,10 @@ type Usage struct {
 
 // StreamChunk represents a single chunk in a streaming response.
 type StreamChunk struct {
+	Error        error
 	Content      string
 	FinishReason string
 	Done         bool
-	Error        error
 }
 
 // Client defines the interface for LLM providers.
@@ -67,13 +66,4 @@ type Client interface {
 type StreamReader interface {
 	Read() (StreamChunk, error)
 	Close() error
-}
-
-// streamReaderAdapter adapts an io.ReadCloser to StreamReader.
-type streamReaderAdapter struct {
-	reader io.ReadCloser
-}
-
-func (s *streamReaderAdapter) Close() error {
-	return s.reader.Close()
 }

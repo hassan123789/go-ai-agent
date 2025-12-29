@@ -9,11 +9,14 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/hassan123789/go-ai-agent/internal/agent"
 	"github.com/hassan123789/go-ai-agent/internal/config"
 	"github.com/hassan123789/go-ai-agent/internal/handler"
 	"github.com/hassan123789/go-ai-agent/internal/llm"
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
+	"github.com/hassan123789/go-ai-agent/internal/tools"
 )
 
 func main() {
@@ -43,7 +46,18 @@ func main() {
 	e.HideBanner = true
 
 	// Middleware
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogStatus:   true,
+		LogURI:      true,
+		LogMethod:   true,
+		LogLatency:  true,
+		LogError:    true,
+		HandleError: true,
+		LogValuesFunc: func(_ echo.Context, v middleware.RequestLoggerValues) error {
+			log.Printf("%s %s %d %v", v.Method, v.URI, v.Status, v.Latency)
+			return nil
+		},
+	}))
 	e.Use(middleware.Recover())
 	e.Use(middleware.CORS())
 	e.Use(middleware.RequestID())
@@ -51,11 +65,25 @@ func main() {
 	// Initialize handlers
 	chatHandler := handler.NewChatHandler(llmClient)
 
+	// Initialize tool registry
+	toolRegistry := tools.NewRegistry()
+	toolRegistry.MustRegister(tools.NewCalculator())
+
+	// Initialize ReAct agent
+	reactAgent := agent.NewReActAgent(llmClient, toolRegistry, agent.Config{
+		MaxIterations: 10,
+		Verbose:       cfg.IsDevelopment(),
+	})
+
+	// Initialize agent handler
+	agentHandler := handler.NewAgentHandler(reactAgent)
+
 	// Routes
 	e.GET("/health", chatHandler.Health)
 
 	api := e.Group("/api")
 	api.POST("/chat", chatHandler.Chat)
+	api.POST("/agent", agentHandler.Run)
 
 	// Start server with graceful shutdown
 	go func() {

@@ -3,8 +3,9 @@ package handler
 import (
 	"net/http"
 
-	"github.com/hassan123789/go-ai-agent/internal/llm"
 	"github.com/labstack/echo/v4"
+
+	"github.com/hassan123789/go-ai-agent/internal/llm"
 )
 
 // ChatHandler handles chat-related HTTP requests.
@@ -35,9 +36,9 @@ type MessageRequest struct {
 
 // ChatResponse represents the response body for chat endpoint.
 type ChatResponse struct {
-	Content      string     `json:"content"`
-	FinishReason string     `json:"finish_reason"`
-	Usage        UsageInfo  `json:"usage"`
+	Content      string    `json:"content"`
+	FinishReason string    `json:"finish_reason"`
+	Usage        UsageInfo `json:"usage"`
 }
 
 // UsageInfo contains token usage information.

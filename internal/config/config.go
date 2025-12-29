@@ -9,17 +9,18 @@ import (
 // Config holds all configuration for the application.
 type Config struct {
 	// Server settings
-	ServerPort int
 	ServerHost string
 
 	// OpenAI settings
-	OpenAIAPIKey   string
-	OpenAIModel    string
-	OpenAIMaxToken int
+	OpenAIAPIKey string
+	OpenAIModel  string
 
 	// Application settings
 	Environment string
 	LogLevel    string
+
+	ServerPort     int
+	OpenAIMaxToken int
 }
 
 // Load reads configuration from environment variables.
