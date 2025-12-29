@@ -3,7 +3,7 @@
 [![Go Version](https://img.shields.io/badge/Go-1.22+-00ADD8?style=flat&logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Production-ready AI Agent framework in Go. Features ReAct pattern, Function Calling, RAG with pgvector, and multi-LLM support (OpenAI/Claude). Clean Architecture + K8s ready.
+Production-ready AI Agent framework in Go. Features ReAct pattern, Function Calling, Hierarchical Memory, Reflexion & Orchestrator agents, and multi-LLM support (OpenAI/Claude/Ollama). Clean Architecture + K8s ready.
 
 ## 🎯 Why Go for AI Agents?
 
@@ -20,12 +20,25 @@ go-ai-agent/
 │   └── server/              # Application entry point
 ├── internal/
 │   ├── config/              # Configuration management
-│   ├── llm/                 # LLM client abstraction
+│   ├── llm/                 # LLM client abstraction (Multi-provider)
 │   │   ├── client.go        # Client interface
-│   │   └── openai.go        # OpenAI implementation
+│   │   ├── openai.go        # OpenAI implementation
+│   │   ├── claude.go        # Claude (Anthropic) implementation
+│   │   ├── ollama.go        # Ollama (local models) implementation
+│   │   ├── provider.go      # Provider factory & router
+│   │   ├── production.go    # Retry, streaming, structured output
+│   │   └── tools.go         # Tool definitions
 │   ├── handler/             # HTTP handlers
-│   ├── agent/               # ReAct agent (coming soon)
-│   └── tools/               # Function calling tools (coming soon)
+│   ├── agent/               # Agent implementations
+│   │   ├── react.go         # ReAct agent pattern
+│   │   ├── reflexion.go     # Self-improving Reflexion agent
+│   │   └── orchestrator.go  # Multi-agent orchestration
+│   ├── memory/              # Memory systems
+│   │   └── hierarchical.go  # Working/Episodic/Semantic memory
+│   ├── vectorstore/         # Vector storage
+│   │   └── raptor.go        # RAPTOR hierarchical retrieval
+│   ├── embedding/           # Embedding providers
+│   └── tools/               # Function calling tools
 ├── pkg/
 │   └── middleware/          # Shared middleware
 └── deploy/                  # Deployment manifests (coming soon)
@@ -107,38 +120,43 @@ make pre-push
 ## 📋 Roadmap
 
 - [x] **Phase 1**: LLM Client & Basic Chat API
-- [ ] **Phase 2**: Function Calling & Tool Integration
-- [ ] **Phase 3**: ReAct Agent Pattern
-- [ ] **Phase 4**: RAG with pgvector
-- [ ] **Phase 5**: Multi-LLM Support (Claude, local models)
+- [x] **Phase 2**: Function Calling & Tool Integration
+- [x] **Phase 3**: ReAct Agent Pattern
+- [x] **Phase 4**: Advanced Agent Patterns (Reflexion, Orchestrator, Hierarchical Memory, RAPTOR)
+- [x] **Phase 5**: Multi-LLM Support (Claude, Ollama local models)
 - [ ] **Phase 6**: Kubernetes Deployment
 
 ## 🧪 Features
 
-### Current (v0.1)
+### Current (v0.5)
 
-- ✅ OpenAI Chat Completion
-- ✅ Streaming Responses (SSE)
-- ✅ Clean Architecture
-- ✅ Configuration Management
-- ✅ Graceful Shutdown
+- ✅ **Multi-LLM Support**: OpenAI, Claude (Anthropic), Ollama (local)
+- ✅ **Provider Abstraction**: Factory pattern with intelligent routing
+- ✅ **ReAct Agent**: Reasoning + Acting pattern
+- ✅ **Reflexion Agent**: Self-improving with evaluation loop
+- ✅ **Orchestrator Agent**: Multi-agent coordination with workers
+- ✅ **Hierarchical Memory**: Working, Episodic, Semantic memory layers
+- ✅ **RAPTOR Store**: Tree-structured hierarchical retrieval
+- ✅ **Production LLM**: Retry, streaming, structured output, error handling
+- ✅ **Function Calling**: Tool integration with OpenAI-compatible API
+- ✅ **Streaming Responses**: SSE support
+- ✅ **Clean Architecture**: Separation of concerns
 
 ### Coming Soon
 
-- 🔄 Function Calling
-- 🔄 ReAct Agent Pattern
-- 🔄 Conversation Memory
 - 🔄 Vector Store (pgvector)
 - 🔄 gRPC API
 - 🔄 Kubernetes Manifests
+- 🔄 Web Search Tool Integration
 
 ## 📊 Tech Stack
 
 | Category | Technology |
-|----------|-----------|
+| -------- | ---------- |
 | Language | Go 1.22+ |
 | HTTP Framework | Echo v4 |
-| LLM Client | sashabaranov/go-openai |
+| LLM Clients | go-openai, anthropic-sdk-go |
+| LLM Providers | OpenAI, Claude, Ollama |
 | Vector DB | pgvector (planned) |
 | Deployment | Kubernetes (planned) |
 
